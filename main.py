@@ -57,9 +57,11 @@ Sell:
 
 import os, json, requests, flask,time
 
-server = flask.Flask(__name__)
+import os, json, requests, flask,time
 
-@server.route("/bot", methods=['POST'])
+app = flask.Flask(__name__)
+
+@app.route("/bot", methods=['POST'])
 def getMessage():
   bot.process_new_updates([
     telebot.types.Update.de_json(flask.request.stream.read().decode("utf-8"))
@@ -67,10 +69,13 @@ def getMessage():
   return "!", 200
 
 
-@server.route("/")
+@app.route("/")
 def webhook():
   bot.remove_webhook()
   link = 'https://'+str(flask.request.host)
   bot.set_webhook(url=f"{link}/bot")
   return "!", 200
-bot.infinity_polling()
+
+
+app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+app = flask.Flask(__name__)
